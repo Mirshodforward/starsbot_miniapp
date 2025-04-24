@@ -84,6 +84,12 @@
     .btn-premium:hover {
       background-color: #e94e4f;
     }
+
+    #loading {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ddd;
+    }
   </style>
 </head>
 <body>
@@ -93,11 +99,12 @@
     <p>Ism: Yuklanmoqda...</p>
     <p>Username: Yuklanmoqda...</p>
     <p>Balans: Yuklanmoqda...</p>
+    <div id="loading">🔄 Ma'lumotlar olinmoqda...</div>
   </div>
 
   <div class="btn-container">
-    <button class="btn btn-stars">⭐ Stars olish</button>
-    <button class="btn btn-premium">💎 Premium olish</button>
+    <button class="btn btn-stars" onclick="alert('🚧 Tez orada ishlaydi')">⭐ Stars olish</button>
+    <button class="btn btn-premium" onclick="alert('🚧 Tez orada ishlaydi')">💎 Premium olish</button>
   </div>
 
   <script>
@@ -105,6 +112,11 @@
     tg.expand();
 
     const user = tg.initDataUnsafe.user;
+
+    if (!user || !user.id) {
+      tg.showAlert("❌ Telegram foydalanuvchi topilmadi");
+      tg.close();
+    }
 
     fetch(`https://flask-production-feb22.up.railway.app/balance?user_id=${user.id}`)
       .then(res => res.json())
@@ -117,11 +129,12 @@
             <p>Balans: ${data.balance.toLocaleString()} so'm</p>
           `;
         } else {
-          alert("❌ Xatolik: " + data.message);
+          tg.showAlert("❌ Xatolik: " + data.message);
         }
       })
       .catch(err => {
-        alert("❌ Ulanishda xatolik: " + err.message);
+        tg.showAlert("❌ Ulanishda xatolik: " + err.message);
+        tg.close();
       });
   </script>
 
